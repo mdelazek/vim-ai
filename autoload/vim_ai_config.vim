@@ -3,8 +3,8 @@ let s:plugin_root = expand('<sfile>:p:h:h')
 let g:vim_ai_complete_default = {
 \  "engine": "complete",
 \  "options": {
-\    "model": "gpt-3.5-turbo-instruct",
-\    "endpoint_url": "https://api.openai.com/v1/completions",
+\    "model": g:default_ai_model,
+\    "endpoint_url": g:ai_api_url,
 \    "max_tokens": 1000,
 \    "temperature": 0.1,
 \    "request_timeout": 20,
@@ -18,8 +18,8 @@ let g:vim_ai_complete_default = {
 let g:vim_ai_edit_default = {
 \  "engine": "complete",
 \  "options": {
-\    "model": "gpt-3.5-turbo-instruct",
-\    "endpoint_url": "https://api.openai.com/v1/completions",
+\    "model": g:default_ai_model,
+\    "endpoint_url": g:ai_api_url,
 \    "max_tokens": 1000,
 \    "temperature": 0.1,
 \    "request_timeout": 20,
@@ -39,8 +39,8 @@ If you attach a code block add syntax type after ``` to enable syntax highlighti
 END
 let g:vim_ai_chat_default = {
 \  "options": {
-\    "model": "gpt-4o",
-\    "endpoint_url": "https://api.openai.com/v1/chat/completions",
+\    "model": g:default_ai_model,
+\    "endpoint_url": g:ai_api_url,
 \    "max_tokens": 0,
 \    "temperature": 1,
 \    "request_timeout": 20,

@@ -1,4 +1,6 @@
 import vim
+import logging
+logging.basicConfig(filename='debug.log', level=logging.DEBUG)
 
 # import utils
 plugin_root = vim.eval("s:plugin_root")
@@ -19,9 +21,12 @@ http_options = make_http_options(config_options)
 is_selection = vim.eval("l:is_selection")
 
 def complete_engine(prompt):
+    messages = [
+            {'role': 'user', 'content': prompt}
+            ]
     request = {
         'stream': True,
-        'prompt': prompt,
+        'messages': messages,
         **openai_options
     }
     printDebug("[engine-complete] request: {}", request)
@@ -29,7 +34,10 @@ def complete_engine(prompt):
     response = openai_request(url, request, http_options)
     def map_chunk(resp):
         printDebug("[engine-complete] response: {}", resp)
-        return resp['choices'][0].get('text', '')
+        if 'delta' in resp['choices'][0]:
+            #logging.debug('%s' % resp['choices'][0].get('content', ''))
+            return resp['choices'][0]['delta'].get('content', '')
+        return ''
     text_chunks = map(map_chunk, response)
     return text_chunks
 
@@ -48,7 +56,9 @@ def chat_engine(prompt):
     response = openai_request(url, request, http_options)
     def map_chunk(resp):
         printDebug("[engine-chat] response: {}", resp)
-        return resp['choices'][0]['delta'].get('content', '')
+        if 'delta' in resp['choices'][0]:
+            return resp['choices'][0]['delta'].get('content', '')
+        return ''
     text_chunks = map(map_chunk, response)
     return text_chunks
 

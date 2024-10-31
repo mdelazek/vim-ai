@@ -19,28 +19,37 @@ debug_log_file = vim.eval("g:vim_ai_debug_log_file")
 class KnownError(Exception):
     pass
 
+#def load_api_key():
+#    config_file_path = os.path.expanduser(vim.eval("g:vim_ai_token_file_path"))
+#    api_key_param_value = os.getenv("OPENAI_API_KEY")
+#    try:
+#        with open(config_file_path, 'r') as file:
+#            api_key_param_value = file.read()
+#    except Exception:
+#        pass
+#
+#    if not api_key_param_value:
+#        raise KnownError("Missing OpenAI API key")
+#
+#    # The text is in format of "<api key>,<org id>" and the
+#    # <org id> part is optional
+#    elements = api_key_param_value.strip().split(",")
+#    api_key = elements[0].strip()
+#    org_id = None
+#
+#    if len(elements) > 1:
+#        org_id = elements[1].strip()
+#    
+#    return api_key
+
 def load_api_key():
-    config_file_path = os.path.expanduser(vim.eval("g:vim_ai_token_file_path"))
-    api_key_param_value = os.getenv("OPENAI_API_KEY")
-    try:
-        with open(config_file_path, 'r') as file:
-            api_key_param_value = file.read()
-    except Exception:
-        pass
+    # Get the API key from .vimrc
+    api_key = vim.eval("g:api_token")
 
-    if not api_key_param_value:
-        raise KnownError("Missing OpenAI API key")
+    if not api_key:
+        raise KnownError("Missing OpenAI API key in .vimrc")
 
-    # The text is in format of "<api key>,<org id>" and the
-    # <org id> part is optional
-    elements = api_key_param_value.strip().split(",")
-    api_key = elements[0].strip()
-    org_id = None
-
-    if len(elements) > 1:
-        org_id = elements[1].strip()
-
-    return (api_key, org_id)
+    return api_key
 
 def normalize_config(config):
     normalized = { **config }
@@ -203,18 +212,19 @@ def openai_request(url, data, options):
     enable_auth=options['enable_auth']
     headers = {
         "Content-Type": "application/json",
+        "User-Agent": 'python-requests/2.23.0',
+        'Accept-Encoding': 'gzip, deflate', 
+        'Accept': '*/*', 
+        'Connection': 'keep-alive',
     }
     if enable_auth:
-        (OPENAI_API_KEY, OPENAI_ORG_ID) = load_api_key()
-        headers['Authorization'] = f"Bearer {OPENAI_API_KEY}"
-
-        if OPENAI_ORG_ID is not None:
-            headers["OpenAI-Organization"] =  f"{OPENAI_ORG_ID}"
+        API_KEY = load_api_key()
+        headers['Authorization'] = "Bearer %s" % API_KEY
 
     request_timeout=options['request_timeout']
     req = urllib.request.Request(
         url,
-        data=json.dumps({ **data }).encode("utf-8"),
+        data=json.dumps(data).encode('utf-8'),
         headers=headers,
         method="POST",
     )

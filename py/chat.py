@@ -80,7 +80,9 @@ try:
         response = openai_request(url, request, http_options)
         def map_chunk(resp):
             printDebug("[chat] response: {}", resp)
-            return resp['choices'][0]['delta'].get('content', '')
+            if 'delta' in resp['choices'][0]:
+                return resp['choices'][0]['delta'].get('content', '')
+            return ''
         text_chunks = map(map_chunk, response)
         render_text_chunks(text_chunks, is_selection)
 
