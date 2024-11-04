@@ -1,6 +1,4 @@
 import vim
-import logging
-logging.basicConfig(filename='debug.log', level=logging.DEBUG)
 
 # import utils
 plugin_root = vim.eval("s:plugin_root")
@@ -35,7 +33,6 @@ def complete_engine(prompt):
     def map_chunk(resp):
         printDebug("[engine-complete] response: {}", resp)
         if 'delta' in resp['choices'][0]:
-            #logging.debug('%s' % resp['choices'][0].get('content', ''))
             return resp['choices'][0]['delta'].get('content', '')
         return ''
     text_chunks = map(map_chunk, response)
