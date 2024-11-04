@@ -19,17 +19,13 @@ Using built-in Vim packages `:help packages`
 ```sh
 # vim
 mkdir -p ~/.vim/pack/plugins/start
-git clone https://github.com/madox2/vim-ai.git ~/.vim/pack/plugins/start/vim-ai
+git clone https://github.com/mdelazek/vim-ai.git ~/.vim/pack/plugins/start/vim-ai
 
-# neovim
-mkdir -p ~/.local/share/nvim/site/pack/plugins/start
-git clone https://github.com/madox2/vim-ai.git ~/.local/share/nvim/site/pack/plugins/start/vim-ai
 ```
 
 ## Configuration
 
-Each command is configured with a corresponding configuration variable.
-To customize the default configuration, initialize the config variable with a selection of options, for example put this to your`.vimrc` file:
+To tailor the default settings, you need to update certain variables in your `.vimrc` file. Here are some examples of what you could add or modify:
 
 ```vim
 let g:default_ai_model = "MODEL_NAME"
