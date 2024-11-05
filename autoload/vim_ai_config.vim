@@ -31,12 +31,13 @@ let g:vim_ai_edit_default = {
 \  },
 \}
 
-let s:initial_chat_prompt =<< trim END
->>> system
+let s:initial_chat_prompt = join([
+\ '>>> system',
+\ '',
+\ 'You are a general assistant.',
+\ 'If you attach a code block add syntax type after ``` to enable syntax highlighting.',
+\ ], "\n")
 
-You are a general assistant.
-If you attach a code block add syntax type after ``` to enable syntax highlighting.
-END
 let g:vim_ai_chat_default = {
 \  "options": {
 \    "model": g:default_ai_model,

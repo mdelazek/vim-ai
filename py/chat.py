@@ -33,8 +33,8 @@ def initialize_chat_window():
     vim.command("normal! G")
     vim_break_undo_sequence()
     vim.command("redraw")
-
-    file_content = vim.eval('trim(join(getline(1, "$"), "\n"))')
+    
+    file_content = vim.eval('substitute(join(getline(1, "$"), "\n"), "^\\s\\+\\|\\s\\+$", "", "")')
     role_lines = re.findall(r'(^>>> user|^>>> system|^<<< assistant).*', file_content, flags=re.MULTILINE)
     if not role_lines[-1].startswith(">>> user"):
         # last role is not user, most likely completion was cancelled before
@@ -56,7 +56,7 @@ http_options = make_http_options(options)
 initial_prompt = '\n'.join(options.get('initial_prompt', []))
 initial_messages = parse_chat_messages(initial_prompt)
 
-chat_content = vim.eval('trim(join(getline(1, "$"), "\n"))')
+chat_content = vim.eval('substitute(join(getline(1, "$"), "\n"), "^\\s\\+\\|\\s\\+$", "", "")')
 chat_messages = parse_chat_messages(chat_content)
 is_selection = vim.eval("l:is_selection")
 

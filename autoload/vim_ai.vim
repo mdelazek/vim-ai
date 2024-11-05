@@ -93,7 +93,7 @@ function! s:MakeSelectionPrompt(selection, instruction, config)
 endfunction
 
 function! s:MakePrompt(selection, instruction, config)
-  let l:instruction = trim(a:instruction)
+  let l:instruction = substitute(a:instruction, '^\s\+|\s\+$', '', '')
   let l:delimiter = l:instruction != "" && a:selection != "" ? ":\n" : ""
   let l:selection = s:MakeSelectionPrompt(a:selection, l:instruction, a:config)
   return join([l:instruction, l:delimiter, l:selection], "")
@@ -119,7 +119,7 @@ function! s:GetSelectionOrRange(is_selection, ...)
   if a:is_selection
     return s:GetVisualSelection()
   else
-    return trim(join(getline(a:1, a:2), "\n"))
+    return substitute(join(getline(a:1, a:2), "\n"), '^\s\+|\s\+$', '', '')
   endif
 endfunction
 
